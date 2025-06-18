@@ -1,0 +1,15 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    environment:
+      - REACT_APP_API_URL=http://localhost:8080/api
+      - VITE_API_URL=http://localhost:8080/api
+      - NODE_ENV=production
+      - REACT_APP_ENV=productionss
+      - VITE_ENV=production
+
+ 
