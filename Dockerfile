@@ -15,23 +15,31 @@ COPY index.html ./
 RUN pnpm run build
 
 # Production stage
-FROM nginx:1.23.3-alpine
+FROM macbre/nginx-http3:latest
 
 # Install curl
-RUN apk add --no-cache curl
+#RUN apk add --no-cache curl
 
 # Copy built app
 COPY --from=build /app/dist /usr/share/nginx/html
 # Copy entrypoint.sh docker-entrypoint.sh
 #COPY entrypoint.sh /docker-entrypoint.d/entrypoint.sh
 #RUN chmod +x /docker-entrypoint.d/entrypoint.sh
+# Copy with executable permissions
+
+USER root
+
+# Production stage
+# Copy built app
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# Copy configuration
+COPY nginx.conf /etc/nginx/nginx.conf
 COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
 
-# Expose port
-EXPOSE 80
+# Expose ports
+EXPOSE 80 443
 
-# Set entrypoint and default command
-CMD ["nginx", "-g", "daemon off;"]
-ENTRYPOINT ["/entrypoint.sh"]
+# Use sh to run the script (bypasses permission issues)
+ENTRYPOINT ["sh", "/entrypoint.sh"]
 
