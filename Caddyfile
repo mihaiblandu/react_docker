@@ -1,0 +1,17 @@
+{
+    local_certs
+	servers {
+        protocols h1 h2 h3
+    }
+}
+
+home.me {
+
+    root * /srv
+    file_server
+    try_files {path} /index.html
+    encode gzip
+
+    tls /etc/caddy/certs/home.me.pem /etc/caddy/certs/home.me-key.pem
+   
+}

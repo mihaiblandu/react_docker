@@ -3,10 +3,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    platform: linux/arm64
     ports:
       - "80:80"
       - "443:443/tcp"
       - "443:443/udp"  # Important: UDP for HTTP/3/QUIC
+      - "2019:2019"  # Caddy admin interface
     environment:
       - REACT_APP_API_URL=http://localhost:8080/api
       - VITE_API_URL=http://localhost:8080/api

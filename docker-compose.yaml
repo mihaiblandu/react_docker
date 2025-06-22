@@ -1,0 +1,24 @@
+version: '3.8'
+services:
+  caddy:
+    image: caddy:latest
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"  # UDP port for HTTP/3 (QUIC)
+    volumes:
+      - ./home.me.pem:/etc/caddy/certs/home.me.pem
+      - ./home.me-key.pem:/etc/caddy/certs/home.me-key.pem
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./dist:/srv
+      - caddy_data:/data
+      - caddy_config:/config
+    restart: unless-stopped
+    extra_hosts:
+      - "home.me:host-gateway"  # Maps to Docker host IP
+    # Alternative: use host networking for easier local development
+    # network_mode: "host"
+
+volumes:
+  caddy_data:
+  caddy_config:

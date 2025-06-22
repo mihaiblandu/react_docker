@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"  # Important for QUIC/HTTP3
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+      - ./dist:/usr/share/nginx/html
+      - ./banner.sh:/docker-entrypoint.d/banner.sh
+      - ./load-env.sh:/docker-entrypoint.d/load-env.sh
+    environment:
+      - spring.boot.app=test
+      - VITE_BASE_URL="https://domain.me/api"
+    restart: unless-stopped
+    
+    
